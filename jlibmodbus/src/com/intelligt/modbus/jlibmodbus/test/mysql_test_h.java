@@ -2,7 +2,7 @@ package com.intelligt.modbus.jlibmodbus.test;
 
 import java.sql.*;
 
-public class mysql_test {
+public class mysql_test_h {
 
     public static void main(String[] args) {
         DBConnection dbConn = new DBConnection();
