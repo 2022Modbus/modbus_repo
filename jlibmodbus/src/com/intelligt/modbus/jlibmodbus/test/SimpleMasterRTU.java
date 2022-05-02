@@ -52,8 +52,9 @@ public class SimpleMasterRTU {
             // if there is at least one serial port at your system
             if (dev_list.length > 0) {
                 // you can choose the one of those you need
-                sp.setDevice(dev_list[1]);
-                System.out.println("dev_list[1] = " + dev_list[1]);
+                sp.setDevice(dev_list[2]);
+                //System.out.println("dev_list[1] = " + dev_list[1]);
+                System.out.println("Connected dev_list[2] = " + dev_list[2]);
                 // these parameters are set by default
                 sp.setBaudRate(SerialPort.BaudRate.BAUD_RATE_9600);
                 sp.setDataBits(8);
@@ -76,32 +77,52 @@ public class SimpleMasterRTU {
                 //SerialUtils.setSerialPortFactory(new SerialPortFactoryTcp(new TcpParameters(InetAddress.getByName(ip), port, true)));
                 // you should use another method:
                 //next you just create your master and use it.
-                ModbusMaster m = ModbusMasterFactory.createModbusMasterRTU(sp);
-                m.connect();
 
-                int slaveId = 1;
-                int offset = 0;
-                int quantity = 32;
-                //you can invoke #connect method manually, otherwise it'll be invoked automatically
-                try {
-                    // at next string we receive ten registers from a slave with id of 1 at offset of 0.
-                    int[] registerValues = m.readHoldingRegisters(slaveId, offset, quantity);
-                    // print values
-                    //System.out.println(registerValues.);
-                    for (int value : registerValues) {
-                        System.out.println("Address: " + offset++ + ", Value: " + value);
-                    }
-                } catch (RuntimeException e) {
-                    throw e;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
+
+                //===================================================================================================
+                //===================================================================================================
+                //===================================================================================================
+                while(true) {
+                    ModbusMaster m = ModbusMasterFactory.createModbusMasterRTU(sp);
+                    m.connect();
+
+                    int slaveId = 1;
+                    int offset = 0;
+                    int quantity = 32;
+                    //you can invoke #connect method manually, otherwise it'll be invoked automatically
                     try {
-                        m.disconnect();
-                    } catch (ModbusIOException e1) {
-                        e1.printStackTrace();
+                        // at next string we receive ten registers from a slave with id of 1 at offset of 0.
+
+                        int[] registerValues = m.readHoldingRegisters(slaveId, offset, quantity);
+                        // print values
+                        //System.out.println(registerValues.);
+                        //3초후 출력
+                        Thread.sleep(3000);
+                        //value값 출력
+                        System.out.println(registerValues[0]);
+
+                        //for (int value : registerValues) {
+                        //    System.out.println("Address: " + offset++ + ", Value: " + value);
+                        //}
+
+
+                    } catch (RuntimeException e) {
+                        throw e;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        try {
+                            m.disconnect();
+                        } catch (ModbusIOException e1) {
+                            e1.printStackTrace();
+                        }
                     }
-                }
+                }//end
+                //===================================================================================================
+                //===================================================================================================
+                //===================================================================================================
+                //===================================================================================================
+
             }
         } catch (RuntimeException e) {
             throw e;
