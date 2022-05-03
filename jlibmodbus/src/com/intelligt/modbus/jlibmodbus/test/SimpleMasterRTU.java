@@ -55,7 +55,7 @@ public class SimpleMasterRTU {
             // if there is at least one serial port at your system
             if (dev_list.length > 0) {
                 // you can choose the one of those you need
-                sp.setDevice(dev_list[2]);
+                sp.setDevice(dev_list[1]);
                 //System.out.println("dev_list[1] = " + dev_list[1]);
                 System.out.println("Connected dev_list[2] = " + dev_list[2]);
                 // these parameters are set by default

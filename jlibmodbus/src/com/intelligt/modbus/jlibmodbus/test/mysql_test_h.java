@@ -8,7 +8,7 @@ public class mysql_test_h {
 //    public static void main(String[] args) {
 //        DBConnection dbConn = new DBConnection();
 //        dbConn.connect();
-//        dbConn.select_weather();
+//        dbConn.insertRealData(80.0, 60.0, 8.0, 51.0, 20.0, 50.0, 6.0, 80.0, 80);
 //        }
 //    }
 //
@@ -98,6 +98,7 @@ public class mysql_test_h {
             connect();
             String sql = "insert into s_real_data values(null,now(),?,?,?,?,?,?,?,?,?,'wish')";
 
+            psmt = connection.prepareStatement(sql);
             psmt.setDouble(1, r_temperature);
             psmt.setDouble(2,r_precipitation);
             psmt.setDouble(3,r_wind);
@@ -109,7 +110,7 @@ public class mysql_test_h {
             psmt.setInt(9,r_aod);
 
 
-            psmt = connection.prepareStatement(sql);
+
             int result = psmt.executeUpdate();
 
             if(result >= 1){
