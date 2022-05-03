@@ -9,6 +9,8 @@ import com.intelligt.modbus.jlibmodbus.tcp.TcpParameters;
 import jssc.SerialPortList;
 
 import java.net.InetAddress;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
@@ -45,6 +47,7 @@ public class SimpleMasterRTU {
     static public void main(String[] arg) {
         SerialParameters sp = new SerialParameters();
         Modbus.setLogLevel(Modbus.LogLevel.LEVEL_DEBUG);
+
         try {
             // you can use just string to get connection with remote slave,
             // but you can also get a list of all serial ports available at your system.
@@ -83,6 +86,15 @@ public class SimpleMasterRTU {
                 //===================================================================================================
                 //===================================================================================================
                 while(true) {
+                    //DB 메서드 호출 객체 생성
+                    mysql_test_h data = new mysql_test_h();
+
+                    //시간구하기
+                    Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+                    //시간형식 맞출 객체 생성
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+
                     ModbusMaster m = ModbusMasterFactory.createModbusMasterRTU(sp);
                     m.connect();
 
@@ -96,10 +108,23 @@ public class SimpleMasterRTU {
                         int[] registerValues = m.readHoldingRegisters(slaveId, offset, quantity);
                         // print values
                         //System.out.println(registerValues.);
-                        //3초후 출력
-                        Thread.sleep(3000);
-                        //value값 출력
-                        System.out.println(registerValues[0]);
+
+                        //10초후 출력
+                        Thread.sleep(10000);
+
+                        //현재 시간 변수
+                        String current_time = sdf.format(timestamp);
+
+                        //발전량 변수
+                        int aod_value = registerValues[0];
+
+                        //현재 시간 출력
+                        System.out.println("현재 시간 = " + current_time);
+
+                        //현재시간과 동일한 DB에 data_time컬럼 호출 메서드
+                        data.findValues(aod_value);
+                        //현재시간과 발전량 출력
+                        System.out.println("발전량: " + aod_value);
 
                         //for (int value : registerValues) {
                         //    System.out.println("Address: " + offset++ + ", Value: " + value);
